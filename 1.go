@@ -7,6 +7,7 @@ import (
     "math/rand"
     "math/cmplx"
 )
+import ( "strings"; "time" )
 
 
 // consective parameter x, y int
@@ -57,6 +58,28 @@ var (
     r = Vertex{X: 1}  // Y:0 is implicit
     s = Vertex{}      // X:0 and Y:0
 )
+
+
+
+// http://tour.golang.org/#38
+func Pic(dx, dy int) [][]uint8 {
+    l := make([][]uint8, dy)
+    for i := range l {
+        l[i] = make([]uint8, dx)
+    }
+    return l
+}
+
+// http://tour.golang.org/#43
+func WordCount(s string) map[string]int {
+    c := make(map[string]int)
+    sf := strings.Fields(s)
+    for i:=0;i<len(sf);i++{
+        c[sf[i]]+=1
+    }
+    return c //map[string]int{"x": 1}
+}
+
 
 func main() {
     fmt.Println("My favorite number is", rand.Intn(10))
@@ -139,6 +162,7 @@ func main() {
     fmt.Println("p[4:] ==", p2[4:])
 
     // the `make` function
+    // In short: `new` allocates memory, `make` initializes the slice, map, and channel types.
     a2 := make([]int, 5)
     fmt.Println("a", a2)
     b2 := make([]int, 0, 5)
@@ -161,6 +185,115 @@ func main() {
 
     // test a rest
     // http://tour.golang.org/#36
+
+
+    // range is something like python's enumerate()
+
+    var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
+    for i, v := range pow {
+        fmt.Printf("2**%d = %d\n", i, v)
+    }
+
+
+    pow2 := make([]int, 10)
+    for i := range pow2 {
+        pow2[i] = 1 << uint(i)
+    }
+    for _, value := range pow2 {
+        fmt.Printf("%d\n", value)
+    }
+
+
+    //maps
+    type Vertex struct {
+        Lat, Long float64
+    }
+
+    var m map[string]Vertex
+    m = make(map[string]Vertex)
+    m["Bell Labs"] = Vertex{
+        40.68433, -74.39967,
+    }
+    fmt.Println(m["Bell Labs"])
+    
+
+    m2 := map[string]Vertex{
+        "Bell Labs": Vertex{
+            40.68433, -74.39967,
+        },
+        "Google": Vertex{
+            37.42202, -122.08408,
+        },
+    }
+    // If the top-level type is just a type name, you can omit it from the elements of the literal
+    var m3 = map[string]Vertex{
+        "Bell Labs": {40.68433, -74.39967},
+        "Google":    {37.42202, -122.08408},
+    }
+
+    fmt.Println(m2, m3)
+
+    // modify values, mutating
+    m4 := make(map[string]int)
+
+    m4["Answer"] = 42
+    fmt.Println("The value:", m4["Answer"])
+
+    m4["Answer"] = 48
+    fmt.Println("The value:", m4["Answer"])
+
+    delete(m4, "Answer")
+    fmt.Println("The value:", m4["Answer"])
+
+    v, ok := m4["Answer"]
+    fmt.Println("The value:", v, "Present?", ok)
+
+    // swtich
+    fmt.Println("When's Saturday?")
+    today := time.Now().Weekday()
+    switch time.Saturday {
+    case today + 0:
+        fmt.Println("Today.")
+    case today + 1:
+        fmt.Println("Tomorrow.")
+    case today + 2:
+        fmt.Println("In two days.")
+    default:
+        fmt.Println("Too far away.")
+    }
+
+    // without condition
+    t := time.Now()
+    switch {
+    case t.Hour() < 12:
+        fmt.Println("Good morning!")
+    case t.Hour() < 17:
+        fmt.Println("Good afternoon.")
+    default:
+        fmt.Println("Good evening.")
+    }
+
+
+    // methods for struct or type
+    // not working in 1.1
+    // func (v *Vertex) Abs() float64 {
+    //     return math.Sqrt(v.X*v.X + v.Y*v.Y)
+    // }
+    //     v := &Vertex{3, 4}
+    // fmt.Println(v.Abs())
+    // type MyFloat float64
+    // func (f MyFloat) Abs() float64 {
+    //     if f < 0 {
+    //         return float64(-f)
+    //     }
+    //     return float64(f)
+    // }
+    // f := MyFloat(-math.Sqrt2)
+    // fmt.Println(f.Abs())
+
+    // @ToDO: Methods with pointer receivers, Interfaces
+    // http://tour.golang.org/#54 to #57
+
 
 
 
