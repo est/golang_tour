@@ -15,3 +15,17 @@ sudo chmod a+x godeb
 
 
 
+
+Mistakes 
+--------
+
+
+    buf := [512]byte
+
+syntax error: unexpected semicolon or newline, expecting {
+
+
+corret use:
+
+    buf := make([]byte, 512)
+    var buf [512]byte
