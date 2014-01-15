@@ -80,6 +80,15 @@ func WordCount(s string) map[string]int {
     return c //map[string]int{"x": 1}
 }
 
+ 
+func sum_f(a []int, c chan int) {
+    sum := 0
+    for _, v := range a {
+        sum += v
+    }
+    c <- sum // send sum to c
+}
+
 
 func main() {
     fmt.Println("My favorite number is", rand.Intn(10))
@@ -187,7 +196,7 @@ func main() {
     // http://tour.golang.org/#36
 
 
-    // range is something like python's enumerate()
+    // range is something like python's enumerate() or JS's forEach()
 
     var pow = []int{1, 2, 4, 8, 16, 32, 64, 128}
     for i, v := range pow {
@@ -295,6 +304,24 @@ func main() {
     // http://tour.golang.org/#54 to #57
 
 
+    // channels
+    my_arr := []int{7, 2, 8, -9, 4, 0}
+
+    my_ch := make(chan int)
+    go sum_f(my_arr[:len(my_arr)/2], my_ch)
+    go sum_f(my_arr[len(my_arr)/2:], my_ch)
+    x, y := <-my_ch, <-my_ch // receive from c
+    fmt.Println(x, y, x+y)
+
+    // my_ch <- 5 will blocking and gorouting deadlock
+    // my_val <- my_ch will also blocking for good.
+    // make it buffered will solve the issue 
+    // like http://tour.golang.org/#67
+
+    // select 
+    // http://tour.golang.org/#69
+
+    
 
 
 }
